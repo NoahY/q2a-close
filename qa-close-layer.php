@@ -48,7 +48,7 @@
 						$closed_message_title = str_replace('#',$this->getHandleFromId((int)$closed_parts[0]),$closed_message_title);
 						
 						$closed_message_div = str_replace('$','<span class="question-closed-reason">'.$closed_parts[1].'</span>',qa_opt('closed_question_text'));
-						$closed_message_div = str_replace('#','<A HREF="'.qa_path_html('user/'.$this->getHandleFromId((int)$closed_parts[0])).'" CLASS="qa-avatar-link">'.$this->getHandleFromId((int)$closed_parts[0]).'</A>',$closed_message_div);
+						$closed_message_div = str_replace('#','<A HREF="'.qa_path_html('user/'.$this->getHandleFromId((int)$closed_parts[0])).'" CLASS="qa-user-link">'.$this->getHandleFromId((int)$closed_parts[0]).'</A>',$closed_message_div);
 						
 						$closer = preg_replace('/\^.*/','',$this->closed);
 						
@@ -114,7 +114,7 @@
 					else if ((qa_opt('close_enable_own') && qa_get_logged_in_userid() == $author) || qa_get_logged_in_level()>=QA_USER_LEVEL_MODERATOR ){
 						
 						$this->content['q_view']['form']['buttons']['close'] = array(
-							'tags'=>'NAME="close_post" onclick="var reason=prompt(\'Please enter a reason for closing this question:\'); jQuery(\'#close_question_reason\').val(reason)"',
+							'tags'=>'NAME="close_post" onclick="var reason=prompt(\'Please enter a reason for closing this question:\'); if(!reason) return false; jQuery(\'#close_question_reason\').val(reason)"',
 							'label'=> qa_opt('close_button_text'),
 						);
 						$this->content['q_view']['form']['hidden']['close_question_reason'] = '" id="close_question_reason';
