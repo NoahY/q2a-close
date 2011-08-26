@@ -45,6 +45,7 @@
 						$closed_parts = explode('^',$this->closed,2);
 						
 						$closed_message_title = str_replace('$',$closed_parts[1],qa_opt('closed_question_text'));
+						$closed_message_title = preg_replace('/<[^>]*>/','',$closed_message_title);
 						$closed_message_title = str_replace('#',$this->getHandleFromId((int)$closed_parts[0]),$closed_message_title);
 						
 						$closed_message_div = str_replace('$','<span class="question-closed-reason">'.$closed_parts[1].'</span>',qa_opt('closed_question_text'));
