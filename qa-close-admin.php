@@ -88,6 +88,7 @@
             $fields[] = array(
                 'label' => 'Closed question text',
                 'tags' => 'NAME="closed_question_text"',
+                'note' => '<i>$ will be replaced by the reason and # by the closing user.</i>',
                 'value' => qa_opt('closed_question_text'),
             );
 
