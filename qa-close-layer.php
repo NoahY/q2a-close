@@ -167,8 +167,8 @@
 		function close_post($qid,$author) {
 
 			if ( (!qa_get_logged_in_userid()) || ((!qa_opt('close_enable_own') || qa_get_logged_in_userid() != $author) && qa_get_logged_in_level()<QA_USER_LEVEL_MODERATOR) ) return;
-
-			$this->closed = qa_get_logged_in_userid().'^'.qa_post_text('close_question_reason');
+			$reason = qa_sanitize_html(qa_post_text('close_question_reason'));
+			$this->closed = qa_get_logged_in_userid().'^'.$reason;
 			
 			qa_db_query_sub(
 				'INSERT INTO ^postmeta (post_id,meta_key,meta_value) VALUES (#,$,$)',
