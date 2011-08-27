@@ -29,18 +29,22 @@
 
 
 					if($this->closed) {
-						error_log($this->closed);
-						unset($GLOBALS['qa_state']);
-						unset($this->qa_state);
-						unset($_POST['doanswerq']);
-						unset($_POST['doansweradd']);
-						unset($_POST['doeditq']);
-						unset($_POST['dosaveq']);
-						unset($_POST['doedit']);
-						unset($_POST['dosave']);
-						unset($_POST['docommentq']);
-						unset($_POST['docommentaddq']);
+
+					// add post elements
+					
+						// button
+
+						$closer = preg_replace('/\^.*/','',$this->closed);
 						
+						if (($closer == $author && qa_opt('close_enable_own') && qa_get_logged_in_userid() == $closer) || qa_get_logged_in_level()>=QA_USER_LEVEL_MODERATOR ){
+							$this->content['q_view']['form']['buttons']['open'] = array(
+								'tags'=>'NAME="reopen_post"',
+								'label'=> qa_opt('reopen_button_text'),
+							);
+						}
+						
+						// title and message
+
 						$this->content['title'] .= ' '.qa_opt('closed_question_title');
 						$closed_parts = explode('^',$this->closed,2);
 						
@@ -50,66 +54,74 @@
 						
 						$closed_message_div = str_replace('$','<span class="question-closed-reason">'.$closed_parts[1].'</span>',qa_opt('closed_question_text'));
 						$closed_message_div = str_replace('#','<A HREF="'.qa_path_html('user/'.$this->getHandleFromId((int)$closed_parts[0])).'" CLASS="qa-user-link">'.$this->getHandleFromId((int)$closed_parts[0]).'</A>',$closed_message_div);
-						
-						$closer = preg_replace('/\^.*/','',$this->closed);
-						
-						if (($closer == $author && qa_opt('close_enable_own') && qa_get_logged_in_userid() == $closer) || qa_get_logged_in_level()>=QA_USER_LEVEL_MODERATOR ){
-							$this->content['q_view']['form']['buttons']['open'] = array(
-								'tags'=>'NAME="reopen_post"',
-								'label'=> qa_opt('reopen_button_text'),
-							);
-						}
 
-						unset($this->content['q_view']['form']['buttons']['edit']);
-						unset($this->content['q_view']['form']['buttons']['answer']);
-						unset($this->content['q_view']['form']['buttons']['comment']);
+						$this->content['q_view']['c_list'][]['content'] = '<div id="question-closed-message">'.$closed_message_div.'</div>';
+
+					// remove editing capabilities
 						
-						$this->content['q_view']['vote_state'] = 'disabled';
-						if(isset($this->content['q_view']['vote_down_tags'])) $this->content['q_view']['vote_down_tags'] = preg_replace('/TITLE="[^"]+"/i','TITLE="'.$closed_message_title.'"',$this->content['q_view']['vote_down_tags']);
-						if(isset($this->content['q_view']['vote_up_tags'])) $this->content['q_view']['vote_up_tags'] = preg_replace('/TITLE="[^"]+"/i','TITLE="'.$closed_message_title.'"',$this->content['q_view']['vote_up_tags']);
-						
-						if(isset($this->content['q_view']['c_list'])) {
-							foreach($this->content['q_view']['c_list'] as $cdx => $comment) {
-								unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['edit']);
-								unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['answer']);
-								unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['comment']);							
+						if(qa_get_logged_in_level()<QA_USER_LEVEL_MODERATOR) {
+
+							unset($GLOBALS['qa_state']);
+							unset($this->qa_state);
+							unset($_POST['doanswerq']);
+							unset($_POST['doansweradd']);
+							unset($_POST['doeditq']);
+							unset($_POST['dosaveq']);
+							unset($_POST['doedit']);
+							unset($_POST['dosave']);
+							unset($_POST['docommentq']);
+							unset($_POST['docommentaddq']);
+							
+							unset($this->content['q_view']['form']['buttons']['edit']);
+							unset($this->content['q_view']['form']['buttons']['answer']);
+							unset($this->content['q_view']['form']['buttons']['comment']);
+							
+							$this->content['q_view']['vote_state'] = 'disabled';
+							if(isset($this->content['q_view']['vote_down_tags'])) $this->content['q_view']['vote_down_tags'] = preg_replace('/TITLE="[^"]+"/i','TITLE="'.$closed_message_title.'"',$this->content['q_view']['vote_down_tags']);
+							if(isset($this->content['q_view']['vote_up_tags'])) $this->content['q_view']['vote_up_tags'] = preg_replace('/TITLE="[^"]+"/i','TITLE="'.$closed_message_title.'"',$this->content['q_view']['vote_up_tags']);
+							
+							if(isset($this->content['q_view']['c_list'])) {
+								foreach($this->content['q_view']['c_list'] as $cdx => $comment) {
+									unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['edit']);
+									unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['answer']);
+									unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['comment']);							
+								}
 							}
-						}
-						
-						
-						if(isset($this->content['a_list']['as'])) {
-							foreach($this->content['a_list']['as'] as $idx => $answer) {
+							
+							
+							if(isset($this->content['a_list']['as'])) {
+								foreach($this->content['a_list']['as'] as $idx => $answer) {
 
-								unset($_POST['doedita_'.$idx]);
-								unset($_POST['dosavea_'.$idx]);
-								unset($_POST['docommenta_'.$idx]);
-								unset($_POST['docommentadda_'.$idx]);
-								
-								unset($this->content['a_list']['as'][$idx]['c_form']);
+									unset($_POST['doedita_'.$idx]);
+									unset($_POST['dosavea_'.$idx]);
+									unset($_POST['docommenta_'.$idx]);
+									unset($_POST['docommentadda_'.$idx]);
+									
+									unset($this->content['a_list']['as'][$idx]['c_form']);
 
 
-								unset($this->content['a_list']['as'][$idx]['select_tags']);
-								unset($this->content['a_list']['as'][$idx]['unselect_tags']);
-								
-								unset($this->content['a_list']['as'][$idx]['form']['buttons']['edit']);
-								unset($this->content['a_list']['as'][$idx]['form']['buttons']['comment']);						
-								
-								$this->content['a_list']['as'][$idx]['vote_state'] = 'disabled';
-								if(isset($this->content['a_list']['as'][$idx]['vote_down_tags'])) $this->content['a_list']['as'][$idx]['vote_down_tags'] = 'TITLE="'.$closed_message_title.'"';
-								if(isset($this->content['a_list']['as'][$idx]['vote_up_tags'])) $this->content['a_list']['as'][$idx]['vote_up_tags'] = 'TITLE="'.$closed_message_title.'"';
-								
-								if(isset($answer['c_list'])) {
-									foreach($answer['c_list'] as $cdx => $comment) {
-										unset($this->content['a_list']['as'][$idx]['c_list'][$cdx]['form']['buttons']['comment']);
+									unset($this->content['a_list']['as'][$idx]['select_tags']);
+									unset($this->content['a_list']['as'][$idx]['unselect_tags']);
+									
+									unset($this->content['a_list']['as'][$idx]['form']['buttons']['edit']);
+									unset($this->content['a_list']['as'][$idx]['form']['buttons']['comment']);						
+									
+									$this->content['a_list']['as'][$idx]['vote_state'] = 'disabled';
+									if(isset($this->content['a_list']['as'][$idx]['vote_down_tags'])) $this->content['a_list']['as'][$idx]['vote_down_tags'] = 'TITLE="'.$closed_message_title.'"';
+									if(isset($this->content['a_list']['as'][$idx]['vote_up_tags'])) $this->content['a_list']['as'][$idx]['vote_up_tags'] = 'TITLE="'.$closed_message_title.'"';
+									
+									if(isset($answer['c_list'])) {
+										foreach($answer['c_list'] as $cdx => $comment) {
+											unset($this->content['a_list']['as'][$idx]['c_list'][$cdx]['form']['buttons']['comment']);
+										}
 									}
 								}
 							}
-						}
-						
-						$this->content['q_view']['c_list'][]['content'] = '<div id="question-closed-message">'.$closed_message_div.'</div>';
+							
 
-						unset($this->content['q_view']['a_form']);					
-						unset($this->content['q_view']['c_form']);					
+							unset($this->content['q_view']['a_form']);					
+							unset($this->content['q_view']['c_form']);		
+						}			
 						
 					}
 					else if ((qa_opt('close_enable_own') && qa_get_logged_in_userid() == $author) || qa_get_logged_in_level()>=QA_USER_LEVEL_MODERATOR ){
