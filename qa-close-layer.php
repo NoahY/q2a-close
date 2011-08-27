@@ -126,7 +126,7 @@
 						if(isset($closed[$question['raw']['postid']])) {
 							$closed_parts = explode('^',$closed[$question['raw']['postid']],2);
 							$closed_message = preg_replace('/<[^>]*>/','',qa_opt('closed_question_text'));
-							$closed_message = str_replace('$',$closed_parts[1],$closed_message);
+							$closed_message = str_replace('$',preg_replace('/<[^>]*>/','',$closed_parts[1]),qa_opt('closed_question_text'));
 							$closed_message = str_replace('#',$this->getHandleFromId((int)$closed_parts[0]),$closed_message);
 							
 							$this->content['q_list']['qs'][$idx]['title'] .= ' '.qa_opt('closed_question_title');
