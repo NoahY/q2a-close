@@ -112,6 +112,7 @@
 									
 									if(isset($answer['c_list'])) {
 										foreach($answer['c_list'] as $cdx => $comment) {
+											unset($this->content['a_list']['as'][$idx]['c_list'][$cdx]['form']['buttons']['edit']);
 											unset($this->content['a_list']['as'][$idx]['c_list'][$cdx]['form']['buttons']['comment']);
 										}
 									}
@@ -124,7 +125,7 @@
 						}			
 						
 					}
-					else if ((qa_opt('close_enable_own') && qa_get_logged_in_userid() == $author) || qa_get_logged_in_level()>=QA_USER_LEVEL_MODERATOR ){
+					else if (isset($this->content['q_view']['form']) && ((qa_opt('close_enable_own') && qa_get_logged_in_userid() == $author) || qa_get_logged_in_level()>=QA_USER_LEVEL_MODERATOR )){
 						
 						$this->content['q_view']['form']['buttons']['close'] = array(
 							'tags'=>'NAME="close_post"'.(strpos(qa_opt('closed_question_text'),'$') !== false?' onclick="var reason=prompt(\'Please enter a reason for closing this question:\'); if(!reason) return false; jQuery(\'#close_question_reason\').val(reason)"':''),
