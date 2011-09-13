@@ -27,35 +27,41 @@
 					if(qa_clicked('close_post') && !$this->closed) $this->close_post($qid,$author);
 					else if(qa_clicked('reopen_post') && $this->closed) $this->reopen_post($qid,$author);
 
+					if(!$this->closed && qa_opt('close_selected') && $this->content['q_view']['raw']['selchildid']) {
+						$this->closed = true;
+					}
 
 					if($this->closed) {
 
 					// add post elements
-					
-						// button
-
-						$closer = preg_replace('/\^.*/','',$this->closed);
 						
-						if (($closer == $author && qa_opt('close_enable_own') && qa_get_logged_in_userid() == $closer) || qa_get_logged_in_level()>=QA_USER_LEVEL_MODERATOR ){
-							$this->content['q_view']['form']['buttons']['open'] = array(
-								'tags'=>'NAME="reopen_post"',
-								'label'=> qa_opt('reopen_button_text'),
-							);
+						if($this->closed !== true) {
+							
+							// button
+							
+							$closer = preg_replace('/\^.*/','',$this->closed);
+							
+							if (($closer == $author && qa_opt('close_enable_own') && qa_get_logged_in_userid() == $closer) || qa_get_logged_in_level()>=QA_USER_LEVEL_MODERATOR ){
+								$this->content['q_view']['form']['buttons']['open'] = array(
+									'tags'=>'NAME="reopen_post"',
+									'label'=> qa_opt('reopen_button_text'),
+								);
+							}
+							
+							// title and message
+
+							$this->content['title'] .= ' '.qa_opt('closed_question_title');
+							$closed_parts = explode('^',$this->closed,2);
+							
+							$closed_message_title = str_replace('$',$closed_parts[1],qa_opt('closed_question_text'));
+							$closed_message_title = preg_replace('/<[^>]*>/','',$closed_message_title);
+							$closed_message_title = str_replace('#',$this->getHandleFromId((int)$closed_parts[0]),$closed_message_title);
+							
+							$closed_message_div = str_replace('$','<span class="question-closed-reason">'.$closed_parts[1].'</span>',qa_opt('closed_question_text'));
+							$closed_message_div = str_replace('#','<A HREF="'.qa_path_html('user/'.$this->getHandleFromId((int)$closed_parts[0])).'" CLASS="qa-user-link">'.$this->getHandleFromId((int)$closed_parts[0]).'</A>',$closed_message_div);
+
+							$this->content['q_view']['c_list'][]['content'] = '<div id="question-closed-message">'.$closed_message_div.'</div>';
 						}
-						
-						// title and message
-
-						$this->content['title'] .= ' '.qa_opt('closed_question_title');
-						$closed_parts = explode('^',$this->closed,2);
-						
-						$closed_message_title = str_replace('$',$closed_parts[1],qa_opt('closed_question_text'));
-						$closed_message_title = preg_replace('/<[^>]*>/','',$closed_message_title);
-						$closed_message_title = str_replace('#',$this->getHandleFromId((int)$closed_parts[0]),$closed_message_title);
-						
-						$closed_message_div = str_replace('$','<span class="question-closed-reason">'.$closed_parts[1].'</span>',qa_opt('closed_question_text'));
-						$closed_message_div = str_replace('#','<A HREF="'.qa_path_html('user/'.$this->getHandleFromId((int)$closed_parts[0])).'" CLASS="qa-user-link">'.$this->getHandleFromId((int)$closed_parts[0]).'</A>',$closed_message_div);
-
-						$this->content['q_view']['c_list'][]['content'] = '<div id="question-closed-message">'.$closed_message_div.'</div>';
 
 					// remove editing capabilities
 						
@@ -76,9 +82,12 @@
 							unset($this->content['q_view']['form']['buttons']['answer']);
 							unset($this->content['q_view']['form']['buttons']['comment']);
 							
-							$this->content['q_view']['vote_state'] = 'disabled';
-							if(isset($this->content['q_view']['vote_down_tags'])) $this->content['q_view']['vote_down_tags'] = preg_replace('/TITLE="[^"]+"/i','TITLE="'.$closed_message_title.'"',$this->content['q_view']['vote_down_tags']);
-							if(isset($this->content['q_view']['vote_up_tags'])) $this->content['q_view']['vote_up_tags'] = preg_replace('/TITLE="[^"]+"/i','TITLE="'.$closed_message_title.'"',$this->content['q_view']['vote_up_tags']);
+							if($this->closed !== true) {
+								
+								$this->content['q_view']['vote_state'] = 'disabled';
+								if(isset($this->content['q_view']['vote_down_tags'])) $this->content['q_view']['vote_down_tags'] = preg_replace('/TITLE="[^"]+"/i','TITLE="'.$closed_message_title.'"',$this->content['q_view']['vote_down_tags']);
+								if(isset($this->content['q_view']['vote_up_tags'])) $this->content['q_view']['vote_up_tags'] = preg_replace('/TITLE="[^"]+"/i','TITLE="'.$closed_message_title.'"',$this->content['q_view']['vote_up_tags']);
+							}
 							
 							if(isset($this->content['q_view']['c_list'])) {
 								foreach($this->content['q_view']['c_list'] as $cdx => $comment) {
@@ -106,9 +115,11 @@
 									unset($this->content['a_list']['as'][$idx]['form']['buttons']['edit']);
 									unset($this->content['a_list']['as'][$idx]['form']['buttons']['comment']);						
 									
-									$this->content['a_list']['as'][$idx]['vote_state'] = 'disabled';
-									if(isset($this->content['a_list']['as'][$idx]['vote_down_tags'])) $this->content['a_list']['as'][$idx]['vote_down_tags'] = 'TITLE="'.$closed_message_title.'"';
-									if(isset($this->content['a_list']['as'][$idx]['vote_up_tags'])) $this->content['a_list']['as'][$idx]['vote_up_tags'] = 'TITLE="'.$closed_message_title.'"';
+									if($this->closed !== true) {
+										$this->content['a_list']['as'][$idx]['vote_state'] = 'disabled';
+										if(isset($this->content['a_list']['as'][$idx]['vote_down_tags'])) $this->content['a_list']['as'][$idx]['vote_down_tags'] = 'TITLE="'.$closed_message_title.'"';
+										if(isset($this->content['a_list']['as'][$idx]['vote_up_tags'])) $this->content['a_list']['as'][$idx]['vote_up_tags'] = 'TITLE="'.$closed_message_title.'"';
+									}
 									
 									if(isset($answer['c_list'])) {
 										foreach($answer['c_list'] as $cdx => $comment) {
@@ -118,8 +129,6 @@
 									}
 								}
 							}
-							
-
 							unset($this->content['q_view']['a_form']);					
 							unset($this->content['q_view']['c_form']);		
 						}			

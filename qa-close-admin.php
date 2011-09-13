@@ -47,8 +47,9 @@
 			);			
 		    }		    
 		}
-                qa_opt('close_enable_own',(bool)qa_post_text('close_enable_own'));
                 qa_opt('close_enable',(bool)qa_post_text('close_enable'));
+                qa_opt('close_enable_own',(bool)qa_post_text('close_enable_own'));
+                qa_opt('close_selected',(bool)qa_post_text('close_selected'));
                 qa_opt('closed_question_title',qa_post_text('closed_question_title'));
                 qa_opt('closed_question_text',qa_post_text('closed_question_text'));
                 qa_opt('close_button_text',qa_post_text('close_button_text'));
@@ -76,6 +77,14 @@
                 'label' => 'Allow closing own questions',
                 'tags' => 'NAME="close_enable_own"',
                 'value' => qa_opt('close_enable_own'),
+                'type' => 'checkbox',
+            );
+            
+            
+            $fields[] = array(
+                'label' => 'Automatically close questions with selected answers',
+                'tags' => 'NAME="close_selected"',
+                'value' => qa_opt('close_selected'),
                 'type' => 'checkbox',
             );
             
