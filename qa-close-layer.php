@@ -6,7 +6,7 @@
 
 		function doctype(){
 
-			if (qa_opt('close_enable')) {
+			if (qa_opt('close_enable') || (qa_opt('close_selected') && $this->content['q_view']['raw']['selchildid'])) {
 
 				$closed_array = qa_db_read_all_assoc(
 					qa_db_query_sub(
@@ -143,7 +143,7 @@
 						$this->content['q_view']['form']['hidden']['close_question_reason'] = '" id="close_question_reason';
 					}
 				}
-				if(isset($this->content['q_list'])) {
+				if(isset($this->content['q_list']) && qa_opt('close_enable')) {
 					foreach($this->content['q_list']['qs'] as $idx => $question) {
 						if(isset($closed[$question['raw']['postid']])) {
 							$closed_parts = explode('^',$closed[$question['raw']['postid']],2);
