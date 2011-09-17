@@ -4,7 +4,7 @@
         Plugin Name: Close Question
         Plugin URI: https://github.com/NoahY/q2a-Close
         Plugin Description: Close questions
-        Plugin Version: 0.1
+        Plugin Version: 1.0b
         Plugin Date: 2011-09-05
         Plugin Author: NoahY
         Plugin Author URI:                              
