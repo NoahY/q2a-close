@@ -13,7 +13,7 @@
 		case 'reopen_button_text':
 		    return 'reopen';
 		case 'close_auto_close_reason':
-		    return 'question limit reached';
+		    return 'answer limit reached';
 		default:
 		    return null;				
 	    }
