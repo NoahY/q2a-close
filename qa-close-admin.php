@@ -12,6 +12,8 @@
 		    return 'close';
 		case 'reopen_button_text':
 		    return 'reopen';
+		case 'close_auto_close_reason':
+		    return 'question limit reached';
 		default:
 		    return null;				
 	    }
@@ -54,6 +56,8 @@
                 qa_opt('closed_question_text',qa_post_text('closed_question_text'));
                 qa_opt('close_button_text',qa_post_text('close_button_text'));
                 qa_opt('reopen_button_text',qa_post_text('reopen_button_text'));
+                qa_opt('close_auto_close',(int)qa_post_text('close_auto_close'));
+                qa_opt('close_auto_close_reason',qa_post_text('close_auto_close_reason'));
                 $ok = 'Settings Saved.';
             }
   
@@ -111,6 +115,23 @@
                 'label' => 'Reopen button text',
                 'tags' => 'NAME="reopen_button_text"',
                 'value' => qa_opt('reopen_button_text'),
+            );
+
+            $fields[] = array(
+                'type' => 'blank',
+            );
+
+            $fields[] = array(
+                'label' => 'Autoclose after # of questions',
+                'tags' => 'NAME="close_auto_close"',
+                'value' => qa_opt('close_auto_close'),
+                'type' => 'number',
+            );
+
+            $fields[] = array(
+                'label' => 'Reason text for autoclose',
+                'tags' => 'NAME="close_auto_close_reason"',
+                'value' => qa_opt('close_auto_close_reason'),
             );
 
             return array(           

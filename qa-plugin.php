@@ -20,6 +20,8 @@
         
         qa_register_plugin_module('module', 'qa-close-admin.php', 'qa_close_admin', 'Close Admin');
         
+        qa_register_plugin_module('event', 'qa-close-check.php','close_check','Close Check');
+       
         qa_register_plugin_layer('qa-close-layer.php', 'Close Layer');
                         
                         
