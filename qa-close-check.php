@@ -18,8 +18,8 @@
 			if($event == 'a_post') {
 				$count = qa_db_read_one_value(
 					qa_db_query_sub(
-						'SELECT COUNT(postid) FROM ^posts WHERE parentid=#',
-						$params['parentid']
+						'SELECT COUNT(postid) FROM ^posts WHERE type=$ AND parentid=#',
+						'A',$params['parentid']
 					),
 					true
 				);	
