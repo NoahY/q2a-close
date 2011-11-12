@@ -60,7 +60,7 @@
 							$closed_message_div = str_replace('$','<span class="question-closed-reason">'.$closed_parts[1].'</span>',qa_opt('closed_question_text'));
 							$closed_message_div = str_replace('#','<A HREF="'.qa_path_html('user/'.$this->getHandleFromId((int)$closed_parts[0])).'" CLASS="qa-user-link">'.$this->getHandleFromId((int)$closed_parts[0]).'</A>',$closed_message_div);
 
-							$this->content['q_view']['c_list'][]['content'] = '<div id="question-closed-message">'.$closed_message_div.'</div>';
+							$this->content['q_view']['c_list'][] = array('content' => '<div id="question-closed-message">'.$closed_message_div.'</div>','hidden'=>'');
 						}
 
 					// remove editing capabilities
