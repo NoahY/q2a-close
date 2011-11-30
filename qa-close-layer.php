@@ -75,12 +75,9 @@
 							unset($_POST['dosaveq']);
 							unset($_POST['doedit']);
 							unset($_POST['dosave']);
-							unset($_POST['docommentq']);
-							unset($_POST['docommentaddq']);
 							
 							unset($this->content['q_view']['form']['buttons']['edit']);
 							unset($this->content['q_view']['form']['buttons']['answer']);
-							unset($this->content['q_view']['form']['buttons']['comment']);
 							
 							if($this->closed !== true) {
 								
@@ -93,7 +90,6 @@
 								foreach($this->content['q_view']['c_list'] as $cdx => $comment) {
 									unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['edit']);
 									unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['answer']);
-									unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['comment']);							
 								}
 							}
 							
@@ -103,8 +99,6 @@
 
 									unset($_POST['doedita_'.$idx]);
 									unset($_POST['dosavea_'.$idx]);
-									unset($_POST['docommenta_'.$idx]);
-									unset($_POST['docommentadda_'.$idx]);
 									
 									unset($this->content['a_list']['as'][$idx]['c_form']);
 
@@ -113,7 +107,6 @@
 									unset($this->content['a_list']['as'][$idx]['unselect_tags']);
 									
 									unset($this->content['a_list']['as'][$idx]['form']['buttons']['edit']);
-									unset($this->content['a_list']['as'][$idx]['form']['buttons']['comment']);						
 									
 									if($this->closed !== true) {
 										$this->content['a_list']['as'][$idx]['vote_state'] = 'disabled';
@@ -124,7 +117,6 @@
 									if(isset($answer['c_list'])) {
 										foreach($answer['c_list'] as $cdx => $comment) {
 											unset($this->content['a_list']['as'][$idx]['c_list'][$cdx]['form']['buttons']['edit']);
-											unset($this->content['a_list']['as'][$idx]['c_list'][$cdx]['form']['buttons']['comment']);
 										}
 									}
 								}
